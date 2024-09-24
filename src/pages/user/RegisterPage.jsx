@@ -5,19 +5,23 @@ import { toast } from "react-toastify";
 import { isValidEmail } from "../../utils/emailUtils";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../../utils/userStorage";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { Col, Row } from "react-bootstrap";
+
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [userToRegisterObject, setUserToRegisterObject] = useState({
     firstname: "",
     lastname: "",
     country: "",
-    dni: 0,
+    dni: "",
     username: "",
     email: "",
     password: "",
   });
   const [passwordRepeated, setPasswordRepeated] = useState("");
   const user = getUser();
-  const navigate = useNavigate();
   useEffect(() => {
     if (user != null && user.id != null) {
       navigate("/");
@@ -40,23 +44,20 @@ const RegisterPage = () => {
         theme: "dark",
       });
     } else if (userToRegisterObject.password !== passwordRepeated) {
-      toast.error("The passwords do not match", {
+      return toast.error("The passwords do not match", {
         theme: "dark",
       });
-      return;
     } else if (!isValidEmail(userToRegisterObject.email)) {
-      toast.error("The email is not valid", {
+      return toast.error("The email is not valid", {
         theme: "datk",
       });
-      return;
     } else if (
       userToRegisterObject.dni.startsWith("0") ||
       userToRegisterObject.dni.toString().length > 8
     ) {
-      toast.error(
+      return toast.error(
         "The DNI is not valid, it cannot start with 0 and must have up to 8 digits. "
       );
-      return;
     }
 
     try {
@@ -66,6 +67,7 @@ const RegisterPage = () => {
       };
       await UserService.register(userToRegister);
       toast.success("Welcome " + userToRegister.firstname + "!");
+      navigate("/user/login");
     } catch (error) {
       toast.error(error.message);
     }
@@ -73,7 +75,153 @@ const RegisterPage = () => {
 
   return (
     <main className={styles.container}>
-      <form>
+      <h3>Register</h3>
+      <Form className={styles.form}>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Firstname: </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter firstname"
+                value={userToRegisterObject.firstname}
+                onChange={(e) =>
+                  setUserToRegisterObject({
+                    ...userToRegisterObject,
+                    firstname: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Lastname: </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter lastname"
+                value={userToRegisterObject.lastname}
+                onChange={(e) =>
+                  setUserToRegisterObject({
+                    ...userToRegisterObject,
+                    lastname: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>DNI: </Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter DNI"
+                value={userToRegisterObject.dni}
+                onChange={(e) =>
+                  setUserToRegisterObject({
+                    ...userToRegisterObject,
+                    dni: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Username: </Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter DNI"
+                value={userToRegisterObject.username}
+                onChange={(e) =>
+                  setUserToRegisterObject({
+                    ...userToRegisterObject,
+                    username: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Email: </Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={userToRegisterObject.email}
+                onChange={(e) =>
+                  setUserToRegisterObject({
+                    ...userToRegisterObject,
+                    email: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Country: </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter country"
+                value={userToRegisterObject.country}
+                onChange={(e) =>
+                  setUserToRegisterObject({
+                    ...userToRegisterObject,
+                    country: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Password: </Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={userToRegisterObject.password}
+                onChange={(e) =>
+                  setUserToRegisterObject({
+                    ...userToRegisterObject,
+                    password: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Repeat password: </Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                value={passwordRepeated}
+                onChange={(e) => setPasswordRepeated(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button
+              style={{ width: "100%", marginTop: 50 }}
+              variant="primary"
+              type="submit"
+              onClick={(e) => handleSubmit(e)}
+            >
+              Submit
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+      {/* <form>
         <h3>Register Page</h3>
         <div>
           <label htmlFor="firstname">Firstname:</label>
@@ -191,7 +339,7 @@ const RegisterPage = () => {
           />
         </div>
         <button onClick={(e) => handleSubmit(e)}>Register</button>
-      </form>
+      </form> */}
     </main>
   );
 };

@@ -5,14 +5,14 @@
   padding: 0;
   box-sizing: border-box;
 }
-html {
-  background: #3b1c32;
-  font-family: Montserrat;
-  color: #ffcf9c;
+
+body {
+  background: #292f36 !important;
+  // color: #ffcf9c !important;
 }
 a {
   text-decoration: underline;
-  color: #ffcf9c;
+  color: white;
 }
 .loader {
   width: 48px;

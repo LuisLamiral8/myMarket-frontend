@@ -15,10 +15,10 @@ export function userReducer(state = initialUser, action) {
     case "SET_USER":
       return {
         ...state,
-        ...action.payload, // Combina las propiedades del payload directamente en el estado
+        ...action.payload,
       };
-    case "CLEAR_USER": // Maneja la acción para limpiar el estado
-      return initialUser; // Restablece el estado al inicial
+    case "CLEAR_USER":
+      return initialUser;
     default:
       return state;
   }

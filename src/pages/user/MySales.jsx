@@ -41,6 +41,19 @@ const MySales = () => {
           </tr>
         </thead>
         <tbody>
+          {productsState.length == 0 && (
+            <tr>
+              <th>No products uploaded.</th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          )}
           {productsState.map((product, index) => (
             <tr key={index}>
               <td>{product.name}</td>

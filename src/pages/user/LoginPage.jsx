@@ -6,6 +6,9 @@ import { useDispatch } from "react-redux";
 
 import { getUser, saveUser } from "../../utils/userStorage";
 import { Link, useNavigate } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+
 const LoginPage = () => {
   const dispatch = useDispatch();
   const user = getUser();
@@ -43,7 +46,51 @@ const LoginPage = () => {
 
   return (
     <main className={styles.container}>
-      <form>
+      <h3>Login</h3>
+      <Form className={styles.form}>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="email"
+            placeholder="Enter email"
+            value={userObject.email}
+            onKeyDown={handleKeyDown}
+            onChange={(e) =>
+              setUserObject({ ...userObject, email: e.target.value })
+            }
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            value={userObject.password}
+            onKeyDown={handleKeyDown}
+            onChange={(e) =>
+              setUserObject({ ...userObject, password: e.target.value })
+            }
+          />
+          <Form.Text className="text-muted" styles={{ color: "white" }}>
+            <Link
+              to="/user/restore-password"
+              className={styles.restorePasswordBtn}
+            >
+              Forgot password? Restore it here.
+            </Link>
+          </Form.Text>
+        </Form.Group>
+        <Button
+          variant="success"
+          type="submit"
+          className={styles.loginBtn}
+          onClick={(e) => handleSubmit(e)}
+        >
+          Login
+        </Button>
+      </Form>
+      {/* <form>
         <h3>Login Page</h3>
         <div>
           <label htmlFor="email">Email:</label>
@@ -75,7 +122,7 @@ const LoginPage = () => {
           </Link>
         </div>
         <button onClick={(e) => handleSubmit(e)}>Login</button>
-      </form>
+      </form> */}
     </main>
   );
 };

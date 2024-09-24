@@ -3,12 +3,19 @@ import styles from "./styles/restorepassword.module.scss";
 import { UserService } from "../../service/user.service";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { Col, Row } from "react-bootstrap";
+import { getUser } from "../../utils/userStorage";
+
 const RestorePasswordPage = () => {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
+  const user = getUser();
+
   useEffect(() => {}, []);
   const handleVerifyEmail = async () => {
     if (email == "") {
@@ -49,7 +56,6 @@ const RestorePasswordPage = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      // Llama a la función que quieres ejecutar
       if (step == 1) {
         handleVerifyEmail();
       } else if (step == 2) {
@@ -57,11 +63,91 @@ const RestorePasswordPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (user != null && user.id != null) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <main className={styles.container}>
       <h3>Restore Password</h3>
+      <Form className={styles.form}>
+        {isLoading == false ? (
+          <>
+            {step == 1 && (
+              <>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Enter email"
+                    value={email}
+                    onKeyDown={handleKeyDown}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Group>
+                <Row>
+                  <Col>
+                    <Button
+                      variant="success"
+                      type="submit"
+                      style={{ width: "100%", marginTop: 40 }}
+                      className={styles.loginBtn}
+                      onClick={handleVerifyEmail}
+                    >
+                      Next
+                    </Button>
+                  </Col>
+                </Row>
+              </>
+            )}
+            {step == 2 && (
+              <>
+                <Form.Group className="mb-3">
+                  <Form.Label>New password:</Form.Label>
+                  <Form.Control
+                    type="password"
+                    placeholder="Enter new password"
+                    value={newPassword}
+                    onKeyDown={handleKeyDown}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                </Form.Group>
+                <Row>
+                  <Col>
+                    <Button
+                      variant="success"
+                      type="submit"
+                      style={{ width: "100%", marginTop: 40 }}
+                      onClick={handleChangePassword}
+                    >
+                      Change My Password
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      variant="secondary"
+                      type="submit"
+                      style={{ width: "100%", marginTop: 40 }}
+                      className={styles.backBtn}
+                      onClick={() => setStep(step - 1)}
+                    >
+                      Back{" "}
+                    </Button>
+                  </Col>
+                </Row>
+                <div></div>
+              </>
+            )}
+          </>
+        ) : (
+          <span className="loader"></span>
+        )}
+      </Form>
 
-      {isLoading == false ? (
+      {/* {isLoading == false ? (
         <>
           {step == 1 && (
             <>
@@ -101,7 +187,7 @@ const RestorePasswordPage = () => {
         </>
       ) : (
         <span className="loader"></span>
-      )}
+      )} */}
     </main>
   );
 };

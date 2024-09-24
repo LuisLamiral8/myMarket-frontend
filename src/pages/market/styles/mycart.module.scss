@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 75px;
+  h3 {
+    font-size: 80px;
+    margin-bottom: 50px;
+  }
+}
