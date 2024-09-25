@@ -26,10 +26,16 @@ const NavbarComponent = () => {
           <Nav className="me-auto">
             {user == null || user.id == null ? (
               <>
-                <Nav.Link className={styles.navLi} onClick={() => navigate("/user/login")}>
+                <Nav.Link
+                  className={styles.navLi}
+                  onClick={() => navigate("/user/login")}
+                >
                   Login
                 </Nav.Link>
-                <Nav.Link className={styles.navLi} onClick={() => navigate("/user/register")}>
+                <Nav.Link
+                  className={styles.navLi}
+                  onClick={() => navigate("/user/register")}
+                >
                   Register
                 </Nav.Link>
               </>
@@ -45,7 +51,7 @@ const NavbarComponent = () => {
                 >
                   Submit Product
                 </NavDropdown.Item>
-                <NavDropdown.Item onClick={() => navigate("/user/my-sales")}>
+                <NavDropdown.Item onClick={() => navigate("/user/my-products")}>
                   My Products
                 </NavDropdown.Item>
                 <NavDropdown.Item

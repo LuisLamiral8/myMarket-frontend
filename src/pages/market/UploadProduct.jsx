@@ -5,6 +5,10 @@ import styles from "./styles/uploadproduct.module.scss";
 import { toast } from "react-toastify";
 import { MarketService } from "../../service/market.service";
 import { CategoryService } from "../../service/category.service";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { Col, InputGroup, Row } from "react-bootstrap";
+
 const UploadProduct = () => {
   const user = getUser();
   const navigate = useNavigate();
@@ -13,21 +17,19 @@ const UploadProduct = () => {
     description: "",
     price: "",
     category: [],
-    isActive: "",
+    active: "",
     seller: {},
     stock: "",
   });
   const [categoryState, setCategoryState] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const handleSubmitProducts = async (e) => {
-    console.log(productObject);
     e.preventDefault();
     if (
       productObject.name == "" ||
       productObject.description == "" ||
       productObject.price == "" ||
-      productObject.category.length == 0 ||
-      productObject.isActive == "" ||
+      // productObject.category.length == 0 ||
       productObject.stock == ""
     ) {
       return toast.error("Please, complete the fields", {
@@ -37,10 +39,14 @@ const UploadProduct = () => {
     try {
       let productToSave = {
         ...productObject,
+        active: productObject == "yes" ? true : false,
         seller: user,
+        category: [categoryState[0]],
       };
+      // console.log(productToSave);
       await MarketService.save(productToSave);
       toast.success("Product Uploaded!");
+      return navigate("/user/my-products");
     } catch (error) {
       toast.error(error.message);
     }
@@ -93,7 +99,8 @@ const UploadProduct = () => {
 
   return (
     <main className={styles.container}>
-      <form>
+      <h3>Upload Product</h3>
+      {/* <form>
         <h3>Upload Product</h3>
         <div>
           <label htmlFor="name">What is the name of the product?</label>
@@ -185,7 +192,114 @@ const UploadProduct = () => {
         <button onClick={(e) => handleSubmitProducts(e)}>
           Publish my product
         </button>
-      </form>
+      </form> */}
+      <Form className={styles.form}>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Name: </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter firstname"
+                value={productObject.name}
+                onChange={(e) =>
+                  setProductObject({ ...productObject, name: e.target.value })
+                }
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Active: </Form.Label>
+              <Form.Select
+                size="lg"
+                aria-label="Default select example"
+                value={productObject.active}
+                onChange={(e) =>
+                  setProductObject({
+                    ...productObject,
+                    active: e.target.value,
+                  })
+                }
+              >
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Form.Group className="mb-3">
+            <Form.Label>Description: </Form.Label>
+            <Form.Control
+              as="textarea"
+              placeholder="Leave a comment here"
+              style={{ height: "100px" }}
+              value={productObject.description}
+              onChange={(e) =>
+                setProductObject({
+                  ...productObject,
+                  description: e.target.value,
+                })
+              }
+            />
+          </Form.Group>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Price: </Form.Label>
+              <InputGroup>
+                <InputGroup.Text>$</InputGroup.Text>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter Price:"
+                  value={productObject.price}
+                  onChange={(e) =>
+                    setProductObject({
+                      ...productObject,
+                      price: e.target.value,
+                    })
+                  }
+                />
+              </InputGroup>
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Stock: </Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter stock"
+                value={productObject.stock}
+                onChange={(e) =>
+                  setProductObject({ ...productObject, stock: e.target.value })
+                }
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Category: </Form.Label>
+              <Form.Control type="text" placeholder="Enter stock" />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button
+              style={{ width: "100%", marginTop: 50 }}
+              variant="primary"
+              type="submit"
+              onClick={(e) => handleSubmitProducts(e)}
+            >
+              Submit
+            </Button>
+          </Col>
+        </Row>
+      </Form>
     </main>
   );
 };

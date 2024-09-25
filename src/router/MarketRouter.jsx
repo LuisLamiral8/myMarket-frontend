@@ -6,6 +6,7 @@ import ProductPage from "../pages/market/ProductPage";
 import ProductNotExists from "../pages/market/ProductNotExists";
 import BuyPage from "../pages/market/BuyPage";
 import MyCart from "../pages/market/MyCart";
+import EditProduct from "../pages/market/EditProduct";
 
 const MarketRouter = () => {
   return (
@@ -16,6 +17,7 @@ const MarketRouter = () => {
       <Route path="my-cart" element={<MyCart />} />
       <Route path="product/not-exist" element={<ProductNotExists />}></Route>
       <Route path="upload-product" element={<UploadProduct />} />
+      <Route path="edit-product" element={<EditProduct />} />
     </Routes>
   );
 };

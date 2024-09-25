@@ -25,6 +25,38 @@ a {
   animation: rotation 1s linear infinite;
 }
 
+.slider-container {
+  width: 85%;
+}
+
+img {
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #292f36;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #939f5c;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #a67c00;
+}
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
