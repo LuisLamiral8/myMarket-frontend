@@ -1,0 +1,35 @@
+.container {
+  height: 80vh;
+  margin-top: 100px;
+  h3 {
+    color: white;
+    text-align: center;
+    font-size: 80px;
+    margin-bottom: 50px;
+  }
+  .navLi {
+    color: white;
+    font-weight: 900;
+    &:hover {
+      color: white;
+    }
+  }
+  section {
+    width: 60%;
+    margin: 0 auto;
+  }
+  .contentContainer {
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+    border-radius: 0 0 25px 25px;
+
+    h2 {
+      color: white;
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+      margin-bottom: 50px;
+    }
+  }
+}

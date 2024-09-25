@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { clearCart } from "../redux/actions/cart.action";
 
 const NavbarComponent = () => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const NavbarComponent = () => {
   const user = getUser();
   const handleLogout = async () => {
     clearUser();
+    dispatch(clearCart());
     navigate("/");
   };
 
@@ -58,6 +60,9 @@ const NavbarComponent = () => {
                   onClick={() => navigate("/user/my-purchases")}
                 >
                   My Purchases
+                </NavDropdown.Item>
+                <NavDropdown.Item onClick={() => navigate("/user/edit")}>
+                  Edit my user
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item

@@ -8,6 +8,7 @@ import { getUser, saveUser } from "../../utils/userStorage";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { clearCart } from "../../redux/actions/cart.action";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const LoginPage = () => {
     try {
       const response = await UserService.login(userObject);
       saveUser(response);
+      dispatch(clearCart());
       navigate("/");
       toast.success("Welcome " + response.firstname + "!");
     } catch (error) {

@@ -46,9 +46,13 @@ export class UserService {
     }
   }
 
-  static async getMyProducts(id) {
+  static async getMyProducts(id, pageNo, itemsPage) {
     try {
-      const response = await axios.get(`${URL_GET_PRODUCTS}?id=${id}`);
+      const response = await axios.get(
+        `${URL_GET_PRODUCTS}?id=${id}&pageNo=${
+          pageNo - 1
+        }&itemsPage=${itemsPage}`
+      );
       return response.data;
     } catch (error) {
       console.error(error.response.data);

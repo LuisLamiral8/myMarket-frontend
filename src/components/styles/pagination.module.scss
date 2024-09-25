@@ -1,0 +1,21 @@
+.container {
+  li {
+    a {
+      margin: 0 5px;
+      color: white;
+      font-size: 18px;
+      background: #212529 !important;
+      border: none;
+      &:focus,
+      &:active,
+      &:hover {
+        color: white !important;
+      }
+    }
+  }
+  .active {
+    a {
+      background-color: #3c444b !important;
+    }
+  }
+}

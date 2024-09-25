@@ -3,17 +3,34 @@ import { UserService } from "../../service/user.service";
 import styles from "./styles/myproducts.module.scss";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../../utils/userStorage";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import { Button, Col, Pagination, Row, Table } from "react-bootstrap";
 import { MarketService } from "../../service/market.service";
 import { toast } from "react-toastify";
+import PaginationComponent from "../../components/PaginationComponent";
 const MyProducts = () => {
   const [productsState, setProductsState] = useState([]);
+  const [pageObject, setPageObject] = useState({
+    page: 1,
+    totalPages: 0,
+    totalProducts: 0,
+  });
   const navigate = useNavigate();
   const user = getUser();
-  const getMyProducts = async () => {
+  const getMyProducts = async (actualPage) => {
+    const itemsPage = 8;
     try {
-      const response = await UserService.getMyProducts(user.id);
-      setProductsState(response.products);
+      const response = await UserService.getMyProducts(
+        user.id,
+        actualPage,
+        itemsPage
+      );
+      console.log("response: ", response);
+      setProductsState(response.content);
+      setPageObject({
+        ...pageObject,
+        totalPages: response.totalPages,
+        totalProducts: response.totalElements,
+      });
     } catch (error) {
       console.error();
     }
@@ -48,8 +65,13 @@ const MyProducts = () => {
     if (user == null || user.id == null) {
       navigate("/");
     }
-    getMyProducts();
+    getMyProducts(pageObject.page);
+    console.log(pageObject.page);
   }, []);
+
+  useEffect(() => {
+    getMyProducts(pageObject.page);
+  }, [pageObject.page]);
 
   return (
     <main className={styles.container}>
@@ -174,6 +196,12 @@ const MyProducts = () => {
           ))}
         </tbody>
       </Table>
+
+      <PaginationComponent
+        totalPages={pageObject.totalPages}
+        page={pageObject.page}
+        setPage={(newPage) => setPageObject({ ...pageObject, page: newPage })}
+      />
     </main>
   );
 };
