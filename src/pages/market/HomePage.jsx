@@ -13,9 +13,24 @@ const HomePage = () => {
     const productsQuantity = 5;
     try {
       const response1 = await MarketService.getRandomProducts(productsQuantity);
+      var fyProducts = [];
+      response1.map((prod) => {
+        return fyProducts.push({
+          ...prod.product,
+          image: prod.image,
+        });
+      });
+      setForYouProducts(fyProducts);
+
       const response2 = await MarketService.getRandomProducts(productsQuantity);
-      setForYouProducts(response1);
-      setOfferProducts(response2);
+      var ofProducts = [];
+      response2.map((prod) => {
+        return ofProducts.push({
+          ...prod.product,
+          image: prod.image,
+        });
+      });
+      setOfferProducts(ofProducts);
     } catch (error) {
       console.error();
     }
@@ -34,7 +49,18 @@ const HomePage = () => {
     speed: 500,
     // centerPadding: "0px",
     slidesToShow: 5,
-    slidesToScroll: 2,
+    slidesToScroll: 3,
+    responsive: [
+      {
+        breakpoint: 1475,
+        settings: {
+          initialSlide: 3,
+          slidesToShow: 4,
+          slidesToScroll: 3,
+          centerMode: "false",
+        },
+      },
+    ],
   };
 
   return (
@@ -42,7 +68,7 @@ const HomePage = () => {
       <h3>Home page</h3>
       <Row className={styles.title}>
         <h5>Products selected for you!</h5>
-        <Link to="/market/allProducts">See all the products here</Link>
+        <Link to="/market/products-list">See all the products here</Link>
         <div className={styles.separator}></div>
       </Row>
       <section className="slider-container">
@@ -52,7 +78,12 @@ const HomePage = () => {
               <HomePageCardItem
                 key={index}
                 title={product.name}
-                img={"https://via.placeholder.com/300"}
+                // img={"https://via.placeholder.com/300"}
+                img={
+                  product.image != null
+                    ? URL.createObjectURL(product.image)
+                    : "https://via.placeholder.com/300"
+                }
                 desc={product.description}
                 price={product.price}
                 button={() =>
@@ -68,17 +99,22 @@ const HomePage = () => {
       </section>
       <Row className={styles.title}>
         <h5>Offers</h5>
-        <Link to="/market/allProducts">See all the products here</Link>
+        <Link to="/market/products-list">See all the products here</Link>
         <div className={styles.separator}></div>
       </Row>
       <section className="slider-container">
         <Slider {...settings}>
-          {forYouProducts.map((product, index) => {
+          {offerProducts.map((product, index) => {
             return (
               <HomePageCardItem
                 key={index}
                 title={product.name}
-                img={"https://via.placeholder.com/300"}
+                // img={"https://via.placeholder.com/300"}
+                img={
+                  product.image != null
+                    ? product.image
+                    : "https://via.placeholder.com/300"
+                }
                 desc={product.description}
                 price={product.price}
                 button={() =>

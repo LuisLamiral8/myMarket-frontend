@@ -79,7 +79,7 @@ const NavbarComponent = () => {
               </Link>
             </Nav.Link>
             <Nav.Link>
-              <Link to="/market/allProducts" className={styles.navLi}>
+              <Link to="/market/products-list" className={styles.navLi}>
                 All products
               </Link>
             </Nav.Link>

@@ -7,7 +7,7 @@ import { MarketService } from "../../service/market.service";
 import { CategoryService } from "../../service/category.service";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { Col, InputGroup, Row } from "react-bootstrap";
+import { Badge, Col, InputGroup, Row } from "react-bootstrap";
 
 const UploadProduct = () => {
   const user = getUser();
@@ -17,34 +17,40 @@ const UploadProduct = () => {
     description: "",
     price: "",
     category: [],
-    active: "",
+    active: "yes",
     seller: {},
     stock: "",
   });
   const [categoryState, setCategoryState] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
   const handleSubmitProducts = async (e) => {
     e.preventDefault();
     if (
       productObject.name == "" ||
       productObject.description == "" ||
       productObject.price == "" ||
-      // productObject.category.length == 0 ||
-      productObject.stock == ""
+      productObject.category.length == 0 ||
+      productObject.stock == "" ||
+      selectedFiles.length == 0
     ) {
       return toast.error("Please, complete the fields", {
         theme: "dark",
       });
     }
     try {
+      console.log("ProductOBject: ", productObject);
       let productToSave = {
         ...productObject,
-        active: productObject == "yes" ? true : false,
+        active: productObject.active == "yes" ? true : false,
         seller: user,
-        category: [categoryState[0]],
+        price: parseFloat(productObject.price),
+        stock: parseInt(productObject.stock),
       };
-      // console.log(productToSave);
-      await MarketService.save(productToSave);
+      console.log("ProductToSave: ", productToSave);
+
+      await MarketService.save(productToSave, selectedFiles);
       toast.success("Product Uploaded!");
       return navigate("/user/my-products");
     } catch (error) {
@@ -53,6 +59,9 @@ const UploadProduct = () => {
   };
   const addCategory = (e) => {
     e.preventDefault();
+    if (selectedCategory == "") {
+      return toast.info("Enter a valid category");
+    }
     const categoryObject = categoryState.find(
       (cat) => cat.id === parseInt(selectedCategory)
     );
@@ -65,11 +74,12 @@ const UploadProduct = () => {
         ...prev,
         category: [...prev.category, categoryObject],
       }));
+    } else {
+      toast.info("The category is already added.");
     }
   };
   const deleteCategoryFromSelected = (e, id) => {
     e.preventDefault();
-    console.log(id);
     const categoryObject = productObject.category.find(
       (cat) => cat.id === parseInt(id)
     );
@@ -87,6 +97,25 @@ const UploadProduct = () => {
       setCategoryState(response);
     } catch (error) {
       console.error();
+    }
+  };
+  const handleDeleteImage = (e, filename) => {
+    e.preventDefault();
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((file) => file.name !== filename)
+    );
+  };
+  const handleFileChange = (event) => {
+    const newFiles = Array.from(event.target.files);
+
+    const fileExists = newFiles.filter(
+      (newFile) => !selectedFiles.some((file) => file.name === newFile.name)
+    );
+
+    if (fileExists.length > 0) {
+      setSelectedFiles((prevFiles) => [...prevFiles, ...fileExists]);
+    } else {
+      toast.info("You've already uploaded that image.");
     }
   };
 
@@ -283,10 +312,86 @@ const UploadProduct = () => {
           <Col>
             <Form.Group className="mb-3">
               <Form.Label>Category: </Form.Label>
-              <Form.Control type="text" placeholder="Enter stock" />
+              <Form.Select
+                size="lg"
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                value={selectedCategory}
+              >
+                <option value="">-</option>
+                {categoryState.map((cat) => {
+                  return <option value={cat.id}>{cat.name}</option>;
+                })}
+              </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col md={2}>
+            <Row>
+              <Form.Label style={{ visibility: "hidden" }}>: </Form.Label>
+              <Button style={{ width: "100%" }} onClick={(e) => addCategory(e)}>
+                Add Category
+              </Button>
+            </Row>
+          </Col>
+        </Row>
+        <Row>
+          <Col className={styles.badgeContainer}>
+            {productObject.category.map((cat, index) => (
+              <Badge
+                key={index}
+                bg="warning"
+                text="dark"
+                className={styles.customBadge}
+              >
+                <p>{cat.name}</p>
+                <button onClick={(e) => deleteCategoryFromSelected(e, cat.id)}>
+                  X
+                </button>
+              </Badge>
+            ))}
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group className="mb-3">
+              <Form.Label>Images: </Form.Label>
+              <Form.Control
+                type="file"
+                multiple
+                style={{ height: "100%" }}
+                onChange={handleFileChange}
+              />
             </Form.Group>
           </Col>
         </Row>
+        <Col className={styles.previewImageContainer}>
+          {selectedFiles.map((file, index) => {
+            console.log("File", file);
+            const imageUrl = URL.createObjectURL(file);
+            return (
+              <div>
+                <button onClick={(e) => handleDeleteImage(e, file.name)}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="black"
+                      d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z"
+                    />
+                  </svg>
+                </button>
+                <img
+                  src={imageUrl}
+                  alt={`preview-${file.name}`}
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+            );
+          })}
+        </Col>
+
         <Row>
           <Col>
             <Button

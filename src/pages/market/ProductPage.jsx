@@ -7,16 +7,20 @@ import { getUser } from "../../utils/userStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { addCart, clearCart, setCart } from "../../redux/actions/cart.action";
 import { toast } from "react-toastify";
+import { getEnvVars } from "../../config/apiUrl";
 const ProductPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const url = getEnvVars();
   const searchParams = new URLSearchParams(location.search);
   const productId = searchParams.get("id");
   const [isLoading, setIsLoading] = useState(false);
   const [productState, setProductState] = useState({
     category: [],
   });
+  const [imagesState, setImagesState] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(0);
   const [amountProduct, setAmountProduct] = useState(1);
 
   const user = getUser();
@@ -25,6 +29,7 @@ const ProductPage = () => {
   const handleBuy = (e) => {
     navigate("/market/buy");
   };
+
   const handleAddCart = (e) => {
     e.preventDefault();
     if (amountProduct == 0 || amountProduct > productState.stock) {
@@ -48,10 +53,13 @@ const ProductPage = () => {
     setIsLoading(true);
     try {
       const response = await MarketService.getProductById(id);
-      console.log(response);
-      setProductState(response);
+
+      console.log("Response: ", response);
+
+      setProductState(response.product);
+      setImagesState(response.images);
     } catch (error) {
-      navigate("/market/product/not-exist");
+      navigate("/market/product-not-exist");
       console.error();
     }
     setIsLoading(false);
@@ -68,8 +76,8 @@ const ProductPage = () => {
     <main className={styles.container}>
       <h3>Product Page</h3>
       <Row>
-        <Link to="/" className={styles.backHome}>
-          Back to Home page
+        <Link onClick={() => navigate(-1)} className={styles.backHome}>
+          Back
         </Link>
       </Row>
       {isLoading == true ? (
@@ -79,13 +87,27 @@ const ProductPage = () => {
           <Row>
             <Col>
               <Col className={styles.imageSelector}>
-                <img src="https://via.placeholder.com/100x100" alt="" />
-                <img src="https://via.placeholder.com/100x100" alt="" />
-                <img src="https://via.placeholder.com/100x100" alt="" />
-                <img src="https://via.placeholder.com/100x100" alt="" />
+                {imagesState.map((image, index) => {
+                  return (
+                    <img
+                      src={image}
+                      alt=""
+                      width={"100"}
+                      height={"100"}
+                      style={{ objectFit: "cover" }}
+                      onClick={() => setSelectedImage(index)}
+                    />
+                  );
+                })}
               </Col>
               <Col className={styles.imageMain}>
-                <img src="https://via.placeholder.com/400x400" alt="" />
+                <img
+                  src={imagesState[selectedImage]}
+                  alt=""
+                  style={{ objectFit: "contain" }}
+                  width={"100%"}
+                  height={"100%"}
+                />
               </Col>
             </Col>
             <Col className={styles.productDesc}>

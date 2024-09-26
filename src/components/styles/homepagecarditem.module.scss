@@ -1,0 +1,12 @@
+.container {
+  min-width: 225px;
+  width: 13vw;
+  height: 35rem !important;
+  border-color: #939f5c;
+}
+
+@media (max-width: 1500px) {
+  .container {
+    width: 220px;
+  }
+}

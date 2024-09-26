@@ -2,9 +2,9 @@ import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "../pages/user/LoginPage";
 import RegisterPage from "../pages/user/RegisterPage";
-import MyPurchases from "../pages/user/MyPurchases";
-import RestorePassword from "../pages/user/RestorePassword";
-import MyProducts from "../pages/user/MyProducts";
+import MyPurchases from "../pages/user/MyPurchasesPage";
+import RestorePassword from "../pages/user/RestorePasswordPage";
+import MyProducts from "../pages/user/MyProductsPage";
 import EditPage from "../pages/user/EditPage";
 
 const UserRouter = () => {

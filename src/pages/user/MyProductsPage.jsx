@@ -39,8 +39,9 @@ const MyProducts = () => {
     e.preventDefault();
     if (user.id === product.seller.id) {
       try {
-        await MarketService.deleteProductById(product.id);
-        await getMyProducts();
+        await MarketService.deleteProductById(product.id).then(() =>
+          getMyProducts(pageObject.page)
+        );
         return toast.success("Product deleted successfully.");
       } catch (error) {
         console.error();
