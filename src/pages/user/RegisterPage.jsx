@@ -132,8 +132,8 @@ const RegisterPage = () => {
             <Form.Group className="mb-3">
               <Form.Label>Username: </Form.Label>
               <Form.Control
-                type="number"
-                placeholder="Enter DNI"
+                type="username"
+                placeholder="Enter username"
                 value={userToRegisterObject.username}
                 onChange={(e) =>
                   setUserToRegisterObject({

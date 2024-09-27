@@ -40,7 +40,6 @@ const UploadProduct = () => {
       });
     }
     try {
-      console.log("ProductOBject: ", productObject);
       let productToSave = {
         ...productObject,
         active: productObject.active == "yes" ? true : false,
@@ -48,7 +47,6 @@ const UploadProduct = () => {
         price: parseFloat(productObject.price),
         stock: parseInt(productObject.stock),
       };
-      console.log("ProductToSave: ", productToSave);
 
       await MarketService.save(productToSave, selectedFiles);
       toast.success("Product Uploaded!");
@@ -129,99 +127,6 @@ const UploadProduct = () => {
   return (
     <main className={styles.container}>
       <h3>Upload Product</h3>
-      {/* <form>
-        <h3>Upload Product</h3>
-        <div>
-          <label htmlFor="name">What is the name of the product?</label>
-          <input
-            type="text"
-            placeholder="Name.."
-            value={productObject.name}
-            onChange={(e) =>
-              setProductObject({ ...productObject, name: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="description">
-            How would you describe the product?
-          </label>
-          <input
-            type="text"
-            placeholder="Description.."
-            value={productObject.description}
-            onChange={(e) =>
-              setProductObject({
-                ...productObject,
-                description: e.target.value,
-              })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="price">What is its price?</label>
-          <input
-            type="number"
-            placeholder="Price.."
-            value={productObject.price}
-            onChange={(e) =>
-              setProductObject({ ...productObject, price: e.target.value })
-            }
-          />
-        </div>
-
-        <div>
-          <label htmlFor="stock">How many units do you want to sell?</label>
-          <input
-            type="number"
-            placeholder="Stock.."
-            value={productObject.stock}
-            onChange={(e) =>
-              setProductObject({ ...productObject, stock: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="categories">What categories does it have?</label>
-          <select
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            value={selectedCategory}
-          >
-            <option value="">-</option>;
-            {categoryState.map((cat) => {
-              return <option value={cat.id}>{cat.name}</option>;
-            })}
-          </select>
-          <button onClick={(e) => addCategory(e)}>Add</button>
-        </div>
-        <div>
-          {productObject.category.map((cat, index) => (
-            <div key={index}>
-              <p>{cat.name}</p>
-              <button onClick={(e) => deleteCategoryFromSelected(e, cat.id)}>
-                X
-              </button>
-            </div>
-          ))}
-        </div>
-        <div>
-          <label htmlFor="Sale">Is the sale active?</label>
-          <input
-            type="checkbox"
-            placeholder="Stock.."
-            value={productObject.isActive}
-            onChange={(e) =>
-              setProductObject({
-                ...productObject,
-                isActive: e.target.checked,
-              })
-            }
-          />
-        </div>
-        <button onClick={(e) => handleSubmitProducts(e)}>
-          Publish my product
-        </button>
-      </form> */}
       <Form className={styles.form}>
         <Row>
           <Col>
@@ -365,7 +270,6 @@ const UploadProduct = () => {
         </Row>
         <Col className={styles.previewImageContainer}>
           {selectedFiles.map((file, index) => {
-            console.log("File", file);
             const imageUrl = URL.createObjectURL(file);
             return (
               <div>

@@ -7,6 +7,7 @@ const URL_EDIT_PRODUCT = getEnvVars() + "product/edit";
 const URL_GET_PRODUCT_BY_ID = getEnvVars() + "product/findById";
 const URL_DELETE_PRODUCT_BY_ID = getEnvVars() + "product/deleteById";
 const URL_GET_ALL_PRODUCTS = getEnvVars() + "product/getAllByPage";
+const URL_GET_IMAGES_FILE_BY_ID = getEnvVars() + "product/getImagesFileById";
 export class MarketService {
   static async save(product, images) {
     const formData = new FormData();
@@ -26,9 +27,25 @@ export class MarketService {
       throw new Error(error.response.data || "Internal Server Error");
     }
   }
-  static async edit(product) {
+  static async edit(product, images) {
+    // try {
+    //   const response = await axios.post(URL_EDIT_PRODUCT, product);
+    //   return response.data;
+    // } catch (error) {
+    //   console.error(error.response.data);
+    //   throw new Error(error.response.data || "Internal Server Error");
+    // }
+    const formData = new FormData();
+    formData.append("product", JSON.stringify(product));
+    images.forEach((image) => {
+      formData.append("images", image);
+    });
     try {
-      const response = await axios.post(URL_EDIT_PRODUCT, product);
+      const response = await axios.post(URL_EDIT_PRODUCT, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response.data;
     } catch (error) {
       console.error(error.response.data);
@@ -109,7 +126,6 @@ export class MarketService {
       throw new Error(error.response.data || "Internal Server Error");
     }
   }
-
   static async getProductById(id) {
     try {
       const response = await axios.get(`${URL_GET_PRODUCT_BY_ID}?id=${id}`);
@@ -135,6 +151,36 @@ export class MarketService {
     try {
       const response = await axios.post(`${URL_DELETE_PRODUCT_BY_ID}?id=${id}`);
       return response.data;
+    } catch (error) {
+      console.error(error.response.data);
+      throw new Error(error.response.data || "Internal Server Error");
+    }
+  }
+  static async getImagesFileById(id) {
+    // Cuando yo desde el backend devuelvo un byte[]
+    // se convierte automáticamente en base64, entonces en el frontend tengo
+    // que convertir ese base64 de nuevo a una cadena de bytes para
+    // despues en un array entero de 8 bits
+    // y una vez tengo eso lo hago blob, y del blob lo hago file
+
+    try {
+      const response = await axios.get(`${URL_GET_IMAGES_FILE_BY_ID}?id=${id}`);
+      var imagesFileObj = response.data.map((imageData) => {
+        //Necesito entender esto...
+        const byteCharacters = atob(imageData.data);
+        const byteNumbers = new Uint8Array(byteCharacters.length);
+
+        // Convertir los caracteres a números de bytes
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const blob = new Blob([byteNumbers], { type: imageData.contentType });
+        const file = new File([blob], imageData.fileName, {
+          type: imageData.contentType,
+        });
+        return file;
+      });
+      return imagesFileObj;
     } catch (error) {
       console.error(error.response.data);
       throw new Error(error.response.data || "Internal Server Error");
