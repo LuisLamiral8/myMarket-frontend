@@ -4,11 +4,9 @@
 2) npm run dev
 
 ## TODO:
-	- Al borrar el archivo fijarse si borra las imágenes también
-	- Spring Security
 	- En la página de editar producto, ver tema categorias e imágenes 
 	- Buscar producto
-	- Tengo que entender en getProductById como de byte pasa a un url y de ahi a un blob (Frontend)
+	- Tengo que entender en getProductById como de byte pasa a un url y de ahi a un blob
 
 
 ### Detalles de páginas
