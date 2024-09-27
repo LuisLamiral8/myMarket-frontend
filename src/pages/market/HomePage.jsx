@@ -72,30 +72,48 @@ const HomePage = () => {
         <div className={styles.separator}></div>
       </Row>
       <section className="slider-container">
-        <Slider {...settings}>
-          {forYouProducts.map((product, index) => {
-            return (
-              <HomePageCardItem
-                key={index}
-                title={product.name}
-                // img={"https://via.placeholder.com/300"}
-                img={
-                  product.image != null
-                    ? URL.createObjectURL(product.image)
-                    : "https://via.placeholder.com/300"
-                }
-                desc={product.description}
-                price={product.price}
-                button={() =>
-                  navigate(
-                    `/market/product?id=${product.id}&name=${product.name}`
-                  )
-                }
-                buttonText="See details"
-              />
-            );
-          })}
-        </Slider>
+        {forYouProducts.length != 0 ? (
+          <>
+            <Slider {...settings}>
+              {forYouProducts.map((product, index) => {
+                return (
+                  <HomePageCardItem
+                    key={index}
+                    title={product.name}
+                    // img={"https://via.placeholder.com/300"}
+                    img={
+                      product.image != null
+                        ? URL.createObjectURL(product.image)
+                        : "https://via.placeholder.com/300"
+                    }
+                    desc={product.description}
+                    price={product.price}
+                    button={() =>
+                      navigate(
+                        `/market/product?id=${product.id}&name=${product.name}`
+                      )
+                    }
+                    buttonText="See details"
+                  />
+                );
+              })}
+            </Slider>
+          </>
+        ) : (
+          <Row>
+            <Col
+              style={{
+                color: "white",
+                fontSize: "40px",
+                fontFamily: "montserrat",
+                fontWeight: "200",
+                marginBottom: "150px",
+              }}
+            >
+              The products could not be loaded
+            </Col>
+          </Row>
+        )}
       </section>
       <Row className={styles.title}>
         <h5>Offers</h5>
@@ -103,30 +121,48 @@ const HomePage = () => {
         <div className={styles.separator}></div>
       </Row>
       <section className="slider-container">
-        <Slider {...settings}>
-          {offerProducts.map((product, index) => {
-            return (
-              <HomePageCardItem
-                key={index}
-                title={product.name}
-                // img={"https://via.placeholder.com/300"}
-                img={
-                  product.image != null
-                    ? product.image
-                    : "https://via.placeholder.com/300"
-                }
-                desc={product.description}
-                price={product.price}
-                button={() =>
-                  navigate(
-                    `/market/product?id=${product.id}&name=${product.name}`
-                  )
-                }
-                buttonText="See details"
-              />
-            );
-          })}
-        </Slider>
+        {offerProducts.length != 0 ? (
+          <>
+            <Slider {...settings}>
+              {offerProducts.map((product, index) => {
+                return (
+                  <HomePageCardItem
+                    key={index}
+                    title={product.name}
+                    // img={"https://via.placeholder.com/300"}
+                    img={
+                      product.image != null
+                        ? product.image
+                        : "https://via.placeholder.com/300"
+                    }
+                    desc={product.description}
+                    price={product.price}
+                    button={() =>
+                      navigate(
+                        `/market/product?id=${product.id}&name=${product.name}`
+                      )
+                    }
+                    buttonText="See details"
+                  />
+                );
+              })}
+            </Slider>
+          </>
+        ) : (
+          <Row>
+            <Col
+              style={{
+                color: "white",
+                fontSize: "40px",
+                fontFamily: "montserrat",
+                fontWeight: "200",
+                marginBottom: "150px",
+              }}
+            >
+              The products could not be loaded
+            </Col>
+          </Row>
+        )}
       </section>
       {/* <div className={styles.sect1}>
         {offerProducts.map((product, index) => {

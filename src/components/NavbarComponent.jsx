@@ -56,14 +56,14 @@ const NavbarComponent = () => {
                 <NavDropdown.Item onClick={() => navigate("/user/my-products")}>
                   My Products
                 </NavDropdown.Item>
-                <NavDropdown.Item
+                {/* <NavDropdown.Item
                   onClick={() => navigate("/user/my-purchases")}
                 >
                   My Purchases
-                </NavDropdown.Item>
-                <NavDropdown.Item onClick={() => navigate("/user/edit")}>
+                </NavDropdown.Item> */}
+                {/* <NavDropdown.Item onClick={() => navigate("/user/edit")}>
                   Edit my user
-                </NavDropdown.Item>
+                </NavDropdown.Item> */}
                 <NavDropdown.Divider />
                 <NavDropdown.Item
                   href="#action/3.4"

@@ -71,14 +71,16 @@ export class MarketService {
       throw new Error(error.response.data || "Internal Server Error");
     }
   }
-  static async getAllProducts(page, itemsPage) {
+  static async getAllProducts(page, itemsPage, opt) {
     // Decodifico base64 a binario original
     // transformo binario a arreglo de bytes
     // de arreglo de bytes a blob
     // devuelvo blob
     try {
       const response = await axios.get(
-        `${URL_GET_ALL_PRODUCTS}?pageNo=${page - 1}&itemsPage=${itemsPage}`
+        `${URL_GET_ALL_PRODUCTS}?pageNo=${
+          page - 1
+        }&itemsPage=${itemsPage}&opt=${opt}`
       );
       var productsObjUrlObjected = [];
       response.data.mainObj.map((product) => {
