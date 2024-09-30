@@ -5,7 +5,7 @@ import RegisterPage from "../pages/user/RegisterPage";
 import MyPurchases from "../pages/user/MyPurchasesPage";
 import RestorePassword from "../pages/user/RestorePasswordPage";
 import MyProducts from "../pages/user/MyProductsPage";
-import EditPage from "../pages/user/EditPage";
+import EditUserPage from "../pages/user/EditUserPage";
 
 const UserRouter = () => {
   return (
@@ -13,7 +13,7 @@ const UserRouter = () => {
       <Route path="*" element={<Navigate to="/user/login" />} />
       <Route path="login" element={<LoginPage />} />
       <Route path="register" element={<RegisterPage />} />
-      <Route path="edit" element={<EditPage />} />
+      <Route path="edit" element={<EditUserPage />} />
       <Route path="restore-password" element={<RestorePassword />} />
       <Route path="my-products" element={<MyProducts />} />
       <Route path="my-purchases" element={<MyPurchases />} />

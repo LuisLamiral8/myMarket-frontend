@@ -13,12 +13,14 @@ const NavbarComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = getUser();
+  
+  
   const handleLogout = async () => {
     clearUser();
     dispatch(clearCart());
     navigate("/");
   };
-
+  
   return (
     <Navbar expand="lg" className={styles.container}>
       <Container>
@@ -61,9 +63,9 @@ const NavbarComponent = () => {
                 >
                   My Purchases
                 </NavDropdown.Item> */}
-                {/* <NavDropdown.Item onClick={() => navigate("/user/edit")}>
+                <NavDropdown.Item onClick={() => navigate("/user/edit")}>
                   Edit my user
-                </NavDropdown.Item> */}
+                </NavDropdown.Item>
                 <NavDropdown.Divider />
                 <NavDropdown.Item
                   href="#action/3.4"

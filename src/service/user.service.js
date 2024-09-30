@@ -6,6 +6,9 @@ const URL_LOGIN = getEnvVars() + "user/login";
 const URL_VERIFY_EMAIL = getEnvVars() + "user/userExists";
 const URL_RECOVER_PASSWORD = getEnvVars() + "user/recoverPassword";
 const URL_GET_PRODUCTS = getEnvVars() + "product/findAllByUser";
+const URL_EDIT_USER = getEnvVars() + "user/edit";
+const URL_DELETE_USER = getEnvVars() + "user/edit";
+
 export class UserService {
   static async register(user) {
     try {
@@ -53,6 +56,16 @@ export class UserService {
           pageNo - 1
         }&itemsPage=${itemsPage}`
       );
+      return response.data;
+    } catch (error) {
+      console.error(error.response.data);
+      throw new Error(error.response.data || "Internal Server Error");
+    }
+  }
+
+  static async editUser(newUser) {
+    try {
+      const response = await axios.post(URL_EDIT_USER, newUser);
       return response.data;
     } catch (error) {
       console.error(error.response.data);
