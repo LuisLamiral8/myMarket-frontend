@@ -41,5 +41,5 @@
 
     - Ver mis compras
     - Sistema comprar
-    - Editar usuario y cambiar contraseña en panel usuario
+    - Cambiar contraseña en panel usuario
     - Frontend buscar producto
