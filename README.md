@@ -20,7 +20,7 @@
 - MyPurchases:
   - TODO..
 - EditUserPage:
-  - TODO..
+  - Página con tabs.. actualmente una única tab donde permite editar información básica del usuario, nombre, apellido, mail, etc..
 - HomePage:
   - Productos mostrados aleatoriamente, 2 secciones, botones para ir a todas los productos y detalles de los productos mostrados
 - ProductPage:
