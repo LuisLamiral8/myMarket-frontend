@@ -6,10 +6,8 @@
 2. npm run dev
 
 ## TODO:
-
-    - Spring Security
+    - Documentar generalmente code
     - Buscar producto
-    - Tengo que entender en getProductById como de byte pasa a un url y de ahi a un blob (Frontend)
 
 ### Detalles de páginas
 
