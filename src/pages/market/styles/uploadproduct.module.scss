@@ -15,6 +15,7 @@
     background-color: #939f5c !important;
     border: none;
     font-weight: 700;
+    font-size: 13px;
     &:hover {
       background-color: #bbce8a !important;
     }
@@ -60,7 +61,7 @@
   }
   .previewImageContainer {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     gap: 0.5vw;
     overflow-x: scroll;
     padding: 50px 0;

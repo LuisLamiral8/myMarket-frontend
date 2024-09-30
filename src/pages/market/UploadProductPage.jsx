@@ -134,7 +134,7 @@ const UploadProduct = () => {
               <Form.Label>Name: </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter firstname"
+                placeholder="Enter name of product"
                 value={productObject.name}
                 onChange={(e) =>
                   setProductObject({ ...productObject, name: e.target.value })

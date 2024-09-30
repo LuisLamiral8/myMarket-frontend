@@ -125,6 +125,8 @@ const HomePage = () => {
           <>
             <Slider {...settings}>
               {offerProducts.map((product, index) => {
+                console.log("Product: ", product);
+
                 return (
                   <HomePageCardItem
                     key={index}
@@ -132,7 +134,7 @@ const HomePage = () => {
                     // img={"https://via.placeholder.com/300"}
                     img={
                       product.image != null
-                        ? product.image
+                        ? URL.createObjectURL(product.image)
                         : "https://via.placeholder.com/300"
                     }
                     desc={product.description}
