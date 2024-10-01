@@ -8,7 +8,7 @@ const URL_RECOVER_PASSWORD = getEnvVars() + "user/recoverPassword";
 const URL_CHANGE_PASSWORD = getEnvVars() + "user/changePassword";
 const URL_GET_PRODUCTS = getEnvVars() + "product/findAllByUser";
 const URL_EDIT_USER = getEnvVars() + "user/edit";
-const URL_DELETE_USER = getEnvVars() + "user/edit";
+const URL_DELETE_USER = getEnvVars() + "user/deleteById";
 
 export class UserService {
   static async register(user) {
@@ -78,6 +78,15 @@ export class UserService {
   static async editUser(newUser) {
     try {
       const response = await axios.post(URL_EDIT_USER, newUser);
+      return response.data;
+    } catch (error) {
+      console.error(error.response.data);
+      throw new Error(error.response.data || "Internal Server Error");
+    }
+  }
+  static async deleteUser(id) {
+    try {
+      const response = await axios.post(`${URL_DELETE_USER}?id=${id}`);
       return response.data;
     } catch (error) {
       console.error(error.response.data);

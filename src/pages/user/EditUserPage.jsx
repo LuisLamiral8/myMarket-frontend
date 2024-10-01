@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Nav, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Modal, Nav, Row } from "react-bootstrap";
 import styles from "./styles/editpage.module.scss";
-import { getUser, saveUser } from "../../utils/userStorage";
+import { clearUser, getUser, saveUser } from "../../utils/userStorage";
 import { isValidEmail } from "../../utils/emailUtils";
 import { toast } from "react-toastify";
 import { UserService } from "../../service/user.service";
 import { useNavigate } from "react-router-dom";
+import { clearCart } from "../../redux/actions/cart.action";
 const EditUserPage = () => {
   const user = getUser();
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = useState("editUser");
   const [passwordRepeated, setPasswordRepeated] = useState("");
+  const [confirmDeleteModalState, setConfirmDeleteModalState] = useState(false);
   const [userState, setUserState] = useState({
     id: null,
     country: null,
@@ -93,7 +95,23 @@ const EditUserPage = () => {
       toast.error(error.message);
     }
   };
-
+  const handleDeleteUser = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await UserService.deleteUser(user.id);
+      console.log("Response: ", response);
+      if (response == true) {
+        clearUser();
+        dispatch(clearCart());
+        navigate("/");
+      } else {
+        toast.error("Error trying to delete the user.");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setConfirmDeleteModalState(false);
+  };
   useEffect(() => {
     setUserState({
       id: user.id,
@@ -315,7 +333,11 @@ const EditUserPage = () => {
           {selectedKey === "other" && (
             <Col>
               <Row>
-                <Button variant="danger" style={{ fontWeight: "bold" }}>
+                <Button
+                  variant="danger"
+                  style={{ fontWeight: "bold" }}
+                  onClick={() => setConfirmDeleteModalState(true)}
+                >
                   Delete My Account
                 </Button>
               </Row>
@@ -323,6 +345,38 @@ const EditUserPage = () => {
           )}
         </div>
       </section>
+      <Modal
+        size="sm"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        show={confirmDeleteModalState}
+        onHide={() => setConfirmDeleteModalState(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm delete my account</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete your account?</p>
+          <p>
+            <strong>This action is Irreversible</strong>
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setConfirmDeleteModalState(false)}
+          >
+            Close
+          </Button>
+          <Button
+            variant="danger"
+            style={{ fontWeight: "bold" }}
+            onClick={(e) => handleDeleteUser(e)}
+          >
+            Delete my account
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </main>
   );
 };
