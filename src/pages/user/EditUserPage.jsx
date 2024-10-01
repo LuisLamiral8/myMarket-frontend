@@ -7,9 +7,11 @@ import { toast } from "react-toastify";
 import { UserService } from "../../service/user.service";
 import { useNavigate } from "react-router-dom";
 import { clearCart } from "../../redux/actions/cart.action";
+import { useDispatch } from "react-redux";
 const EditUserPage = () => {
   const user = getUser();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [selectedKey, setSelectedKey] = useState("editUser");
   const [passwordRepeated, setPasswordRepeated] = useState("");
   const [confirmDeleteModalState, setConfirmDeleteModalState] = useState(false);
