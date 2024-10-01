@@ -7,9 +7,10 @@ import { toast } from "react-toastify";
 import { UserService } from "../../service/user.service";
 import { useNavigate } from "react-router-dom";
 const EditUserPage = () => {
+  const user = getUser();
+  const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = useState("editUser");
   const [passwordRepeated, setPasswordRepeated] = useState("");
-  const navigate = useNavigate();
   const [userState, setUserState] = useState({
     id: null,
     country: null,
@@ -21,9 +22,13 @@ const EditUserPage = () => {
     password: null,
     role: null,
   });
-  const user = getUser();
+  const [changePasswordObj, setChangePasswordObj] = useState({
+    actualPassword: "",
+    newPassword: "",
+    email: "",
+  });
 
-  const handleSubmit = async (e) => {
+  const handleEditUser = async (e) => {
     e.preventDefault();
 
     if (
@@ -40,7 +45,7 @@ const EditUserPage = () => {
       });
     } else if (!isValidEmail(userState.email)) {
       return toast.error("The email is not valid", {
-        theme: "dak",
+        theme: "dark",
       });
     } else if (
       userState.dni.startsWith("0") ||
@@ -65,6 +70,30 @@ const EditUserPage = () => {
       toast.error(error.message);
     }
   };
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await UserService.changePassword(
+        changePasswordObj.email,
+        changePasswordObj.actualPassword,
+        changePasswordObj.newPassword
+      );
+
+      if (response == true) {
+        toast.success("Password changed!");
+        setChangePasswordObj({
+          ...changePasswordObj,
+          actualPassword: "",
+          newPassword: "",
+        });
+      } else {
+        toast.error("Error trying to change the password.");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     setUserState({
       id: user.id,
@@ -76,6 +105,10 @@ const EditUserPage = () => {
       username: user.username,
       password: user.password,
       role: user.role,
+    });
+    setChangePasswordObj({
+      ...changePasswordObj,
+      email: user.email,
     });
   }, []);
   return (
@@ -93,11 +126,16 @@ const EditUserPage = () => {
               My data{" "}
             </Nav.Link>
           </Nav.Item>
-          {/*<Nav.Item>
+          <Nav.Item>
             <Nav.Link eventKey="changePassword" className={styles.navLi}>
               Change Password
             </Nav.Link>
-  </Nav.Item>*/}
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="other" className={styles.navLi}>
+              Other
+            </Nav.Link>
+          </Nav.Item>
         </Nav>
         <div className={styles.contentContainer}>
           {selectedKey === "editUser" && (
@@ -212,7 +250,7 @@ const EditUserPage = () => {
                       style={{ width: "100%", marginTop: 50 }}
                       variant="primary"
                       type="submit"
-                      onClick={(e) => handleSubmit(e)}
+                      onClick={(e) => handleEditUser(e)}
                     >
                       Submit
                     </Button>
@@ -224,7 +262,64 @@ const EditUserPage = () => {
           {selectedKey === "changePassword" && (
             <div>
               <h2>Change Password</h2>
+              <Form className={styles.form}>
+                <Row>
+                  <Col>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Actual Password: </Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Enter actual password"
+                        value={changePasswordObj.actualPassword}
+                        onChange={(e) =>
+                          setChangePasswordObj({
+                            ...changePasswordObj,
+                            actualPassword: e.target.value,
+                          })
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group className="mb-3">
+                      <Form.Label>New Password: </Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Enter new password"
+                        value={changePasswordObj.newPassword}
+                        onChange={(e) =>
+                          setChangePasswordObj({
+                            ...changePasswordObj,
+                            newPassword: e.target.value,
+                          })
+                        }
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Button
+                      style={{ width: "100%", marginTop: 50 }}
+                      variant="primary"
+                      type="submit"
+                      onClick={(e) => handleChangePassword(e)}
+                    >
+                      Submit
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
             </div>
+          )}
+          {selectedKey === "other" && (
+            <Col>
+              <Row>
+                <Button variant="danger" style={{ fontWeight: "bold" }}>
+                  Delete My Account
+                </Button>
+              </Row>
+            </Col>
           )}
         </div>
       </section>

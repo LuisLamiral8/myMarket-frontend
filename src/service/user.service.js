@@ -5,6 +5,7 @@ const URL_REGISTER = getEnvVars() + "user/register";
 const URL_LOGIN = getEnvVars() + "user/login";
 const URL_VERIFY_EMAIL = getEnvVars() + "user/userExists";
 const URL_RECOVER_PASSWORD = getEnvVars() + "user/recoverPassword";
+const URL_CHANGE_PASSWORD = getEnvVars() + "user/changePassword";
 const URL_GET_PRODUCTS = getEnvVars() + "product/findAllByUser";
 const URL_EDIT_USER = getEnvVars() + "user/edit";
 const URL_DELETE_USER = getEnvVars() + "user/edit";
@@ -41,6 +42,17 @@ export class UserService {
     try {
       const response = await axios.post(
         `${URL_RECOVER_PASSWORD}?email=${email}&newPassword=${newPassword}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error.response.data);
+      throw new Error(error.response.data || "Internal Server Error");
+    }
+  }
+  static async changePassword(email, actualPassword, newPassword) {
+    try {
+      const response = await axios.post(
+        `${URL_CHANGE_PASSWORD}?email=${email}&oldPassword=${actualPassword}&newPassword=${newPassword}`
       );
       return response.data;
     } catch (error) {

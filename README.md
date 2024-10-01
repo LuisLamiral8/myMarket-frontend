@@ -6,8 +6,15 @@
 2. npm run dev
 
 ## TODO:
+
     - Documentar generalmente code
     - Buscar producto
+
+## TODO Pero no creo llegar:
+
+    - Ver mis compras
+    - Sistema comprar
+    - Frontend buscar producto
 
 ### Detalles de páginas
 
@@ -20,7 +27,7 @@
 - MyPurchases:
   - TODO..
 - EditUserPage:
-  - Página con tabs.. actualmente una única tab donde permite editar información básica del usuario, nombre, apellido, mail, etc..
+  - Página con tres tabs, la primera permite editar información básica del usuario, nombre, apellido, mail, etc.. La segunda permite cambiar la contraseña, y la tercera varias opciones. Por el momento un único botón "Eliminar Cuenta"
 - HomePage:
   - Productos mostrados aleatoriamente, 2 secciones, botones para ir a todas los productos y detalles de los productos mostrados
 - ProductPage:
@@ -36,10 +43,3 @@
   - Trae los datos por default editables del producto, validacion por campos vacios
 - AllProducts:
   - Permite visualizar todos los productos, paginación, ordernar por diferentes casos (Nombre, descripción..).
-
-## TODO Pero no creo llegar:
-
-    - Ver mis compras
-    - Sistema comprar
-    - Cambiar contraseña en panel usuario
-    - Frontend buscar producto
