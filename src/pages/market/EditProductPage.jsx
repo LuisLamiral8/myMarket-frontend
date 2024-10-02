@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getUser } from "../../utils/userStorage";
+import { getUsername } from "../../utils/userStorage";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Badge, Col, InputGroup, Row } from "react-bootstrap";
@@ -12,7 +12,7 @@ import { CategoryService } from "../../service/category.service";
 const EditProduct = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const user = getUser();
+  const user = getUsername();
   const { product } = location.state || {};
   const [categoryState, setCategoryState] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -48,6 +48,17 @@ const EditProduct = () => {
     var objEdited = {
       ...productObject,
       active: productObject.active == "yes" ? true : false,
+      seller: {
+        id: productObject.seller.id,
+        firstname: productObject.seller.firstname,
+        lastname: productObject.seller.lastname,
+        username: productObject.seller.username,
+        email: productObject.seller.email,
+        password: productObject.seller.password,
+        country: productObject.seller.country,
+        dni: productObject.seller.dni,
+        role: productObject.seller.role,
+      },
     };
     try {
       console.log("objEdited: ", objEdited);
@@ -105,7 +116,6 @@ const EditProduct = () => {
   const getProductImages = async (id) => {
     try {
       const response = await MarketService.getImagesFileById(id);
-      console.log("REsponse: ", response);
       setSelectedFiles(response);
     } catch (error) {
       console.error();
@@ -134,7 +144,7 @@ const EditProduct = () => {
     getCategories();
     if (
       user == null ||
-      user.id == null ||
+      user == "" ||
       product == undefined ||
       Object.keys(product).length === 0
     ) {

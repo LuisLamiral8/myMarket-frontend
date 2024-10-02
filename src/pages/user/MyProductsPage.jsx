@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { UserService } from "../../service/user.service";
 import styles from "./styles/myproducts.module.scss";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../../utils/userStorage";
+import { getUsername } from "../../utils/userStorage";
 import { Button, Col, Pagination, Row, Table } from "react-bootstrap";
 import { MarketService } from "../../service/market.service";
 import { toast } from "react-toastify";
@@ -15,16 +15,15 @@ const MyProducts = () => {
     totalProducts: 0,
   });
   const navigate = useNavigate();
-  const user = getUser();
+  const user = getUsername();
   const getMyProducts = async (actualPage) => {
     const itemsPage = 8;
     try {
       const response = await UserService.getMyProducts(
-        user.id,
+        user,
         actualPage,
         itemsPage
       );
-      console.log("response: ", response);
       setProductsState(response.content);
       setPageObject({
         ...pageObject,
@@ -37,7 +36,7 @@ const MyProducts = () => {
   };
   const handleDeleteProduct = async (e, product) => {
     e.preventDefault();
-    if (user.id === product.seller.id) {
+    if (user === product.seller.username) {
       try {
         await MarketService.deleteProductById(product.id).then(() =>
           getMyProducts(pageObject.page)
@@ -58,16 +57,14 @@ const MyProducts = () => {
   };
   const handleGoToProduct = async (e, product) => {
     e.preventDefault();
-    console.log("Clicked! handleGoToProduct");
     navigate(`/market/product?id=${product.id}&name=${product.name}`);
   };
 
   useEffect(() => {
-    if (user == null || user.id == null) {
+    if (user == null || user == "") {
       navigate("/");
     }
     getMyProducts(pageObject.page);
-    console.log(pageObject.page);
   }, []);
 
   useEffect(() => {

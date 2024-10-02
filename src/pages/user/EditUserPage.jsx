@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Nav, Row } from "react-bootstrap";
 import styles from "./styles/editpage.module.scss";
-import { clearUser, getUser, saveUser } from "../../utils/userStorage";
+import {
+  clearUser,
+  getTokenFromCookie,
+  getUsername,
+} from "../../utils/userStorage";
 import { isValidEmail } from "../../utils/emailUtils";
 import { toast } from "react-toastify";
 import { UserService } from "../../service/user.service";
@@ -9,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { clearCart } from "../../redux/actions/cart.action";
 import { useDispatch } from "react-redux";
 const EditUserPage = () => {
-  const user = getUser();
+  const user = getUsername();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedKey, setSelectedKey] = useState("editUser");
@@ -31,10 +35,11 @@ const EditUserPage = () => {
     newPassword: "",
     email: "",
   });
+  const [disableAllInputs, setDisableAllInputs] = useState(false);
 
   const handleEditUser = async (e) => {
     e.preventDefault();
-
+    setDisableAllInputs(true);
     if (
       userState.firstname == "" ||
       userState.lastname == "" ||
@@ -56,7 +61,10 @@ const EditUserPage = () => {
       userState.dni.toString().length > 8
     ) {
       return toast.error(
-        "The DNI is not valid, it cannot start with 0 and must have up to 8 digits. "
+        "The DNI is not valid, it cannot start with 0 and must have up to 8 digits. ",
+        {
+          theme: "dark",
+        }
       );
     }
 
@@ -65,14 +73,19 @@ const EditUserPage = () => {
         ...userState,
         dni: userState.dni.toString(),
       };
-      const response = await UserService.editUser(userToEditObj);
+      await UserService.editUser(userToEditObj);
       toast.success("User edited!");
-      saveUser(response);
-      navigate(0);
-      console.log("Response: ", response);
+      setTimeout(() => {
+        navigate(0);
+      }, 1000);
     } catch (error) {
-      toast.error(error.message);
+      if (error.message.includes("Duplicate entry")) {
+        toast.error("Duplicate entry for username ", userState.username, ".");
+      } else {
+        toast.error(error.message);
+      }
     }
+    setDisableAllInputs(false);
   };
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -100,7 +113,7 @@ const EditUserPage = () => {
   const handleDeleteUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await UserService.deleteUser(user.id);
+      const response = await UserService.deleteUser(user);
       console.log("Response: ", response);
       if (response == true) {
         clearUser();
@@ -114,22 +127,32 @@ const EditUserPage = () => {
     }
     setConfirmDeleteModalState(false);
   };
+  const getMyUser = async (e) => {
+    try {
+      const response = await UserService.getUserByUsername(user);
+      console.log("Response en componente: ", response);
+      setUserState({
+        id: response.id,
+        country: response.country,
+        dni: response.dni,
+        email: response.email,
+        firstname: response.firstname,
+        lastname: response.lastname,
+        username: response.username,
+        password: response.password,
+        role: response.role,
+      });
+      setChangePasswordObj({
+        ...changePasswordObj,
+        email: response.email,
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   useEffect(() => {
-    setUserState({
-      id: user.id,
-      country: user.country,
-      dni: user.dni,
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      username: user.username,
-      password: user.password,
-      role: user.role,
-    });
-    setChangePasswordObj({
-      ...changePasswordObj,
-      email: user.email,
-    });
+    getMyUser();
+    console.log("Token: ", getTokenFromCookie());
   }, []);
   return (
     <main className={styles.container}>
@@ -168,6 +191,7 @@ const EditUserPage = () => {
                       <Form.Label>Firstname: </Form.Label>
                       <Form.Control
                         type="text"
+                        disabled={disableAllInputs}
                         placeholder="Enter firstname"
                         value={userState.firstname}
                         onChange={(e) =>
@@ -185,6 +209,7 @@ const EditUserPage = () => {
                       <Form.Control
                         type="text"
                         placeholder="Enter lastname"
+                        disabled={disableAllInputs}
                         value={userState.lastname}
                         onChange={(e) =>
                           setUserState({
@@ -200,6 +225,7 @@ const EditUserPage = () => {
                       <Form.Label>DNI: </Form.Label>
                       <Form.Control
                         type="number"
+                        disabled={disableAllInputs}
                         placeholder="Enter DNI"
                         value={userState.dni}
                         onChange={(e) =>
@@ -218,6 +244,7 @@ const EditUserPage = () => {
                       <Form.Label>Username: </Form.Label>
                       <Form.Control
                         type="username"
+                        disabled={disableAllInputs}
                         placeholder="Enter username"
                         value={userState.username}
                         onChange={(e) =>
@@ -234,6 +261,7 @@ const EditUserPage = () => {
                       <Form.Label>Email: </Form.Label>
                       <Form.Control
                         type="email"
+                        disabled={disableAllInputs}
                         placeholder="Enter email"
                         value={userState.email}
                         onChange={(e) =>
@@ -253,6 +281,7 @@ const EditUserPage = () => {
                       <Form.Control
                         type="text"
                         placeholder="Enter country"
+                        disabled={disableAllInputs}
                         value={userState.country}
                         onChange={(e) =>
                           setUserState({
@@ -269,6 +298,7 @@ const EditUserPage = () => {
                     <Button
                       style={{ width: "100%", marginTop: 50 }}
                       variant="primary"
+                      disabled={disableAllInputs}
                       type="submit"
                       onClick={(e) => handleEditUser(e)}
                     >
@@ -368,7 +398,7 @@ const EditUserPage = () => {
             variant="secondary"
             onClick={() => setConfirmDeleteModalState(false)}
           >
-            Close
+            Cancel
           </Button>
           <Button
             variant="danger"

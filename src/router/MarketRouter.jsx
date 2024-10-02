@@ -12,14 +12,22 @@ import AllProductsPage from "../pages/market/AllProductsPage";
 const MarketRouter = () => {
   return (
     <Routes>
+      {/* Funcional */}
       <Route path="home" element={<HomePage />} />
+      {/* Funcional con detalles */}
       <Route path="product" element={<ProductPage />} />
-      <Route path="buy" element={<BuyPage />} />
+      {/* Funcional */}
       <Route path="my-cart" element={<MyCart />} />
-      <Route path="product-not-exist" element={<ProductNotExists />}></Route>
+      {/* Funcional */}
+      <Route path="product-not-exist" element={<ProductNotExists />} />
+      {/* Funcional */}
       <Route path="upload-product" element={<UploadProduct />} />
+      {/* Funcional */}
       <Route path="edit-product" element={<EditProduct />} />
+      {/* Funcional */}
       <Route path="products-list" element={<AllProductsPage />} />
+      {/* TODO... */}
+      <Route path="buy" element={<BuyPage />} />
     </Routes>
   );
 };

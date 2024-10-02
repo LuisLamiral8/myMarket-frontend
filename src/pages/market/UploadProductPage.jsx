@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../../utils/userStorage";
+import { getUsername } from "../../utils/userStorage";
 import styles from "./styles/uploadproduct.module.scss";
 import { toast } from "react-toastify";
 import { MarketService } from "../../service/market.service";
@@ -8,9 +8,10 @@ import { CategoryService } from "../../service/category.service";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Badge, Col, InputGroup, Row } from "react-bootstrap";
+import { UserService } from "../../service/user.service";
 
 const UploadProduct = () => {
-  const user = getUser();
+  const user = getUsername();
   const navigate = useNavigate();
   const [productObject, setProductObject] = useState({
     name: "",
@@ -24,7 +25,6 @@ const UploadProduct = () => {
   const [categoryState, setCategoryState] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
-
   const handleSubmitProducts = async (e) => {
     e.preventDefault();
     if (
@@ -43,11 +43,10 @@ const UploadProduct = () => {
       let productToSave = {
         ...productObject,
         active: productObject.active == "yes" ? true : false,
-        seller: user,
         price: parseFloat(productObject.price),
         stock: parseInt(productObject.stock),
       };
-
+      console.log("ProductToSave: ", productToSave);
       await MarketService.save(productToSave, selectedFiles);
       toast.success("Product Uploaded!");
       return navigate("/user/my-products");
@@ -97,6 +96,28 @@ const UploadProduct = () => {
       console.error();
     }
   };
+  const getMyUser = async () => {
+    try {
+      const response = await UserService.getUserByUsername(user);
+      console.log("Usuario: ", response);
+      setProductObject({
+        ...productObject,
+        seller: {
+          id: response.id,
+          firstname: response.firstname,
+          lastname: response.lastname,
+          username: response.username,
+          email: response.email,
+          password: response.password,
+          country: response.country,
+          dni: response.dni,
+          role: response.role,
+        },
+      });
+    } catch (error) {
+      toast.error("Error trying to get user");
+    }
+  };
   const handleDeleteImage = (e, filename) => {
     e.preventDefault();
     setSelectedFiles((prevFiles) =>
@@ -118,10 +139,11 @@ const UploadProduct = () => {
   };
 
   useEffect(() => {
-    if (user == null || user.id == null) {
+    if (user == null || user == "") {
       navigate("/");
     }
     getCategories();
+    getMyUser();
   }, []);
 
   return (

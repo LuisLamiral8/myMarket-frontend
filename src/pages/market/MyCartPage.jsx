@@ -4,12 +4,12 @@ import Table from "react-bootstrap/Table";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../../utils/userStorage";
+import { getUsername } from "../../utils/userStorage";
 import { removeCartItem } from "../../redux/actions/cart.action";
 import { toast } from "react-toastify";
 const MyCart = () => {
   const myCart = useSelector((state) => state.cartState.myCart);
-  const user = getUser();
+  const user = getUsername();
   const [totalText, setTotalText] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,12 +26,12 @@ const MyCart = () => {
     dispatch(removeCartItem(identifier));
   };
   useEffect(() => {
-    if (user == null || user.id == null) {
+    if (user == null || user == "") {
       navigate("/");
     }
     getTotal();
-    console.log("MyCart: ", myCart);
   }, []);
+
   useEffect(() => {
     getTotal();
   }, [myCart]);

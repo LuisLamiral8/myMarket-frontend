@@ -3,19 +3,18 @@ import styles from "./styles/login.module.scss";
 import { UserService } from "../../service/user.service";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-
-import { getUser, saveUser } from "../../utils/userStorage";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { getTokenFromCookie, getUsername } from "../../utils/userStorage";
 import { clearCart } from "../../redux/actions/cart.action";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const user = getUser();
+  const user = getUsername();
   const navigate = useNavigate();
   const [userObject, setUserObject] = useState({
-    email: "luisito.lfl69@gmail.com",
+    username: "luisla",
     password: "pass",
   });
   const handleSubmit = async (e) => {
@@ -23,15 +22,13 @@ const LoginPage = () => {
     if (userObject.email == "" || userObject.password == "") {
       return toast.error("Please complete the fields.");
     }
-    try {
-      const response = await UserService.login(userObject);
-      saveUser(response);
-      dispatch(clearCart());
-      navigate("/");
-      toast.success("Welcome " + response.firstname + "!");
-    } catch (error) {
-      toast.error(error.message);
-    }
+    await UserService.login(userObject)
+      .then((res) => {
+        dispatch(clearCart());
+        navigate("/");
+        toast.success("Welcome " + res + "!");
+      })
+      .catch((error) => toast.error(error.message));
   };
 
   const handleKeyDown = (e) => {
@@ -41,7 +38,7 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (user != null && user.id != null) {
+    if (user != null && user != "") {
       navigate("/");
     }
   }, []);
@@ -51,14 +48,14 @@ const LoginPage = () => {
       <h3>Login</h3>
       <Form className={styles.form}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
+          <Form.Label>Username</Form.Label>
           <Form.Control
-            type="email"
-            placeholder="Enter email"
-            value={userObject.email}
+            type="text"
+            placeholder="Enter username"
+            value={userObject.username}
             onKeyDown={handleKeyDown}
             onChange={(e) =>
-              setUserObject({ ...userObject, email: e.target.value })
+              setUserObject({ ...userObject, username: e.target.value })
             }
           />
         </Form.Group>
@@ -92,39 +89,6 @@ const LoginPage = () => {
           Login
         </Button>
       </Form>
-      {/* <form>
-        <h3>Login Page</h3>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="text"
-            placeholder="email@gmail.com"
-            value={userObject.email}
-            onKeyDown={handleKeyDown}
-            onChange={(e) =>
-              setUserObject({ ...userObject, email: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            placeholder="password.."
-            value={userObject.password}
-            onKeyDown={handleKeyDown}
-            onChange={(e) =>
-              setUserObject({ ...userObject, password: e.target.value })
-            }
-          />
-        </div>
-        <div>
-          <Link to="/user/restore-password">
-            Forgot password? Restore it here.
-          </Link>
-        </div>
-        <button onClick={(e) => handleSubmit(e)}>Login</button>
-      </form> */}
     </main>
   );
 };

@@ -3,16 +3,15 @@ import styles from "./styles/productpage.module.scss";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Badge, Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { MarketService } from "../../service/market.service";
-import { getUser } from "../../utils/userStorage";
+import { getUsername } from "../../utils/userStorage";
 import { useDispatch, useSelector } from "react-redux";
-import { addCart, clearCart, setCart } from "../../redux/actions/cart.action";
+import { addCart } from "../../redux/actions/cart.action";
 import { toast } from "react-toastify";
-import { getEnvVars } from "../../config/apiUrl";
 const ProductPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const url = getEnvVars();
+  const user = getUsername();
   const searchParams = new URLSearchParams(location.search);
   const productId = searchParams.get("id");
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +22,6 @@ const ProductPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [amountProduct, setAmountProduct] = useState(1);
 
-  const user = getUser();
   const myCart = useSelector((state) => state.cartState.myCart);
 
   const handleBuy = (e) => {
@@ -163,8 +161,8 @@ const ProductPage = () => {
                       user == null ||
                       (user != null &&
                         productState.seller &&
-                        productState.active == true &&
-                        user.id === productState.seller.id)
+                        user === productState.seller.username) ||
+                      productState.active == false
                     }
                   >
                     Buy
@@ -178,8 +176,8 @@ const ProductPage = () => {
                       user == null ||
                       (user != null &&
                         productState.seller &&
-                        productState.active == true &&
-                        user.id === productState.seller.id)
+                        user === productState.seller.username) ||
+                      productState.active == false
                     }
                   >
                     Add to Cart
@@ -194,8 +192,8 @@ const ProductPage = () => {
                       user == null ||
                       (user != null &&
                         productState.seller &&
-                        productState.active == true &&
-                        user.id === productState.seller.id)
+                        user === productState.seller.username) ||
+                      productState.active == false
                     }
                   />
                 </Col>
@@ -203,11 +201,16 @@ const ProductPage = () => {
               </Row>
               {user != null &&
                 productState.seller &&
-                user.id === productState.seller.id && (
+                user === productState.seller.username && (
                   <Row style={{ color: "#65696e" }}>
                     <Col>You can't buy your own product!</Col>
                   </Row>
                 )}
+              {productState.active == false && (
+                <Row style={{ color: "#65696e" }}>
+                  <Col>The product is temporarily disabled</Col>
+                </Row>
+              )}
             </Col>
           </Row>
         </Container>

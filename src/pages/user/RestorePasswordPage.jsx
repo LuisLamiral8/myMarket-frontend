@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Col, Row } from "react-bootstrap";
-import { getUser } from "../../utils/userStorage";
+import { getUsername } from "../../utils/userStorage";
 
 const RestorePasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ const RestorePasswordPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
-  const user = getUser();
+  const user = getUsername();
 
   useEffect(() => {}, []);
   const handleVerifyEmail = async () => {
@@ -65,7 +65,7 @@ const RestorePasswordPage = () => {
   };
 
   useEffect(() => {
-    if (user != null && user.id != null) {
+    if (user != null && user != "") {
       navigate("/");
     }
   }, []);

@@ -4,7 +4,7 @@ import { UserService } from "../../service/user.service";
 import { toast } from "react-toastify";
 import { isValidEmail } from "../../utils/emailUtils";
 import { useNavigate } from "react-router-dom";
-import { getUser } from "../../utils/userStorage";
+import { getUsername } from "../../utils/userStorage";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Col, Row } from "react-bootstrap";
@@ -21,9 +21,9 @@ const RegisterPage = () => {
     password: "",
   });
   const [passwordRepeated, setPasswordRepeated] = useState("");
-  const user = getUser();
+  const user = getUsername();
   useEffect(() => {
-    if (user != null && user.id != null) {
+    if (user != null && user != "") {
       navigate("/");
     }
   }, []);
@@ -49,14 +49,15 @@ const RegisterPage = () => {
       });
     } else if (!isValidEmail(userToRegisterObject.email)) {
       return toast.error("The email is not valid", {
-        theme: "datk",
+        theme: "dark",
       });
     } else if (
       userToRegisterObject.dni.startsWith("0") ||
       userToRegisterObject.dni.toString().length > 8
     ) {
       return toast.error(
-        "The DNI is not valid, it cannot start with 0 and must have up to 8 digits. "
+        "The DNI is not valid, it cannot start with 0 and must have up to 8 digits. ",
+        { theme: "dark" }
       );
     }
 
@@ -66,7 +67,7 @@ const RegisterPage = () => {
         dni: userToRegisterObject.dni.toString(),
       };
       await UserService.register(userToRegister);
-      toast.success("Welcome " + userToRegister.firstname + "!");
+      toast.success("User registered!");
       navigate("/user/login");
     } catch (error) {
       toast.error(error.message);

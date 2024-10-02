@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getEnvVars } from "../config/apiUrl";
+import axiosInstance from "../config/axiosConfig";
 
 const URL_REGISTER = getEnvVars() + "product/save";
 const URL_GET_RANDOM_PRODUCTS = getEnvVars() + "product/getRandomProducts";
@@ -10,13 +11,15 @@ const URL_GET_ALL_PRODUCTS = getEnvVars() + "product/getAllByPage";
 const URL_GET_IMAGES_FILE_BY_ID = getEnvVars() + "product/getImagesFileById";
 export class MarketService {
   static async save(product, images) {
+    // Funcional
+
     const formData = new FormData();
     formData.append("product", JSON.stringify(product));
     images.forEach((image) => {
       formData.append("images", image);
     });
     try {
-      const response = await axios.post(URL_REGISTER, formData, {
+      const response = await axiosInstance.post(URL_REGISTER, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -28,20 +31,13 @@ export class MarketService {
     }
   }
   static async edit(product, images) {
-    // try {
-    //   const response = await axios.post(URL_EDIT_PRODUCT, product);
-    //   return response.data;
-    // } catch (error) {
-    //   console.error(error.response.data);
-    //   throw new Error(error.response.data || "Internal Server Error");
-    // }
     const formData = new FormData();
     formData.append("product", JSON.stringify(product));
     images.forEach((image) => {
       formData.append("images", image);
     });
     try {
-      const response = await axios.post(URL_EDIT_PRODUCT, formData, {
+      const response = await axiosInstance.post(URL_EDIT_PRODUCT, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -53,12 +49,14 @@ export class MarketService {
     }
   }
   static async getRandomProducts(productsQuantity) {
+    // Funcional
+
     // Decodifico base64 a binario original
     // transformo binario a arreglo de bytes
     // de arreglo de bytes a blob
     // devuelvo blob
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `${URL_GET_RANDOM_PRODUCTS}?products=${productsQuantity}`
       );
       var productsObjUrlObjected = [];
@@ -89,12 +87,14 @@ export class MarketService {
     }
   }
   static async getAllProducts(page, itemsPage, opt) {
+    // Funcional
+
     // Decodifico base64 a binario original
     // transformo binario a arreglo de bytes
     // de arreglo de bytes a blob
     // devuelvo blob
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `${URL_GET_ALL_PRODUCTS}?pageNo=${
           page - 1
         }&itemsPage=${itemsPage}&opt=${opt}`
@@ -127,8 +127,12 @@ export class MarketService {
     }
   }
   static async getProductById(id) {
+    // Funcional
+
     try {
-      const response = await axios.get(`${URL_GET_PRODUCT_BY_ID}?id=${id}`);
+      const response = await axiosInstance.get(
+        `${URL_GET_PRODUCT_BY_ID}?id=${id}`
+      );
       const imageUrls = response.data.images.map((image) => {
         const byteCharacters = atob(image);
         const byteNumbers = new Uint8Array(byteCharacters.length);
@@ -149,7 +153,9 @@ export class MarketService {
   }
   static async deleteProductById(id) {
     try {
-      const response = await axios.post(`${URL_DELETE_PRODUCT_BY_ID}?id=${id}`);
+      const response = await axiosInstance.post(
+        `${URL_DELETE_PRODUCT_BY_ID}?id=${id}`
+      );
       return response.data;
     } catch (error) {
       console.error(error.response.data);
@@ -157,6 +163,8 @@ export class MarketService {
     }
   }
   static async getImagesFileById(id) {
+    // Funcional
+
     // Cuando yo desde el backend devuelvo un byte[]
     // se convierte automáticamente en base64, entonces en el frontend tengo
     // que convertir ese base64 de nuevo a una cadena de bytes para
@@ -164,7 +172,9 @@ export class MarketService {
     // y una vez tengo eso lo hago blob, y del blob lo hago file
 
     try {
-      const response = await axios.get(`${URL_GET_IMAGES_FILE_BY_ID}?id=${id}`);
+      const response = await axiosInstance.get(
+        `${URL_GET_IMAGES_FILE_BY_ID}?id=${id}`
+      );
       var imagesFileObj = response.data.map((imageData) => {
         //Necesito entender esto...
         const byteCharacters = atob(imageData.data);

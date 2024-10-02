@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./styles/navbar.module.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { clearUser, getUser } from "../utils/userStorage";
+import { useDispatch } from "react-redux";
+import { clearUser, getUsername } from "../utils/userStorage";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -12,15 +12,13 @@ import { clearCart } from "../redux/actions/cart.action";
 const NavbarComponent = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = getUser();
-  
-  
+  const user = getUsername();
   const handleLogout = async () => {
     clearUser();
     dispatch(clearCart());
     navigate("/");
   };
-  
+
   return (
     <Navbar expand="lg" className={styles.container}>
       <Container>
@@ -28,7 +26,7 @@ const NavbarComponent = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            {user == null || user.id == null ? (
+            {user == null || user == "" ? (
               <>
                 <Nav.Link
                   className={styles.navLi}
@@ -45,7 +43,7 @@ const NavbarComponent = () => {
               </>
             ) : (
               <NavDropdown
-                title={`Welcome ${user.firstname}!`}
+                title={`Welcome ${user}!`}
                 id="basic-nav-dropdown"
                 menuVariant="dark"
                 className={styles.navDropdown}
@@ -85,73 +83,10 @@ const NavbarComponent = () => {
                 All products
               </Link>
             </Nav.Link>
-            {/* {user != null && user.id != null && (
-              <>
-                <Nav.Link>
-                  <Link to="/market/upload-product" className={styles.navLi}>
-                    Submit Product
-                  </Link>
-                </Nav.Link>
-                <Nav.Link>
-                  <Link to="/user/my-sales" className={styles.navLi}>
-                    My Products
-                  </Link>
-                </Nav.Link>
-                <Nav.Link>
-                  <Link to="/user/my-purchases" className={styles.navLi}>
-                    My Purchases
-                  </Link>
-                </Nav.Link>
-              </>
-            )} */}
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
-
-    // <nav className={styles.container}>
-    //   <ul>
-    //     <li>
-    //       <Link to="/">HomePage</Link>
-    //     </li>
-    //     {user != null && user.id != null && (
-    //       <>
-    //         <li>
-    //           <Link to="/market/upload-product">Submit Product</Link>
-    //         </li>
-    //         <li>
-    //           <Link to="/user/my-sales">My Products</Link>
-    //         </li>
-    //         <li>
-    //           <Link to="/user/my-purchases">My Purchases</Link>
-    //         </li>
-    //       </>
-    //     )}
-
-    //     {user == null || user.id == null ? (
-    //       <>
-    //         <li>
-    //           <Link to="/user/login">Login</Link>
-    //         </li>
-    //         <li>
-    //           <Link to="/user/register">Register</Link>
-    //         </li>
-    //       </>
-    //     ) : (
-    //       <>
-    //         <li>
-    //           <Link to="/market/my-cart">My Cart</Link>
-    //         </li>
-    //         <li>
-    //           <h5>Hello {user.firstname}!</h5>
-    //           <a style={{ cursor: "pointer" }} onClick={() => handleLogout()}>
-    //             Logout
-    //           </a>
-    //         </li>
-    //       </>
-    //     )}
-    //   </ul>
-    // </nav>
   );
 };
 

@@ -25,6 +25,7 @@ const AppRouter = () => {
       <NavbarComponent />
       <GoToMyCartButton />
       <Routes>
+        <Route path="*" element={<Navigate to="/market/home" />} />
         <Route path="/" element={<Navigate to="/market/home" />} />
         <Route path="/user/*" element={<UserRouter />} />
         <Route path="/market/*" element={<MarketRouter />} />

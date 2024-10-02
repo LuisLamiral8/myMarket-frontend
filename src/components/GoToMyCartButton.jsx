@@ -3,14 +3,14 @@ import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/gotomycartbutton.module.scss";
 import { useSelector } from "react-redux";
-import { getUser } from "../utils/userStorage";
+import { getUsername } from "../utils/userStorage";
 const GoToMyCartButton = () => {
   const navigate = useNavigate();
   const myCart = useSelector((state) => state.cartState.myCart);
-  const user = getUser();
+  const user = getUsername();
   return (
     <>
-      {user && user.id != null && (
+      {user && user != "" && (
         <Button
           className={styles.container}
           onClick={() => navigate("/market/my-cart")}

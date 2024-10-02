@@ -125,7 +125,6 @@ const HomePage = () => {
           <>
             <Slider {...settings}>
               {offerProducts.map((product, index) => {
-                console.log("Product: ", product);
 
                 return (
                   <HomePageCardItem
