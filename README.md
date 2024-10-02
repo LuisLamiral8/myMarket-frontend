@@ -1,5 +1,14 @@
 # MyMarket Marketplace.
-
+## Tecnologías usadas:
+    - ReactJS 18.3
+    - React Redux 9.1
+    - SASS
+    - React Bootstrap
+## Librerias misc. usadas:
+    - Axios 1.7
+    - React Router DOM 6.26
+    - React Slick
+    - React Toastify
 ### Pasos a seguir para levantar en Local:
 
 1. npm install
